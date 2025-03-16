@@ -6,6 +6,7 @@ import com.uno.dtos.responseDto.GeneralResponseWithData;
 import com.uno.entity.User;
 import com.uno.security.AuthenticationService;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
@@ -18,6 +19,7 @@ import java.util.UUID;
 
 @RestController
 @RequestMapping("/api/auth")
+@Tag(name = "Authentication", description = "Authentication")
 public class AuthenticationController {
     private  final AuthenticationService authenticationService;
 

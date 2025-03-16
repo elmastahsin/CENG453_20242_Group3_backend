@@ -117,6 +117,8 @@ public class AuthenticationService {
         newUser.setPassword(passwordEncoder.encode(newUser.getPassword()));
         newUser.setGameCount(0L);
         newUser.setVerified(false);
+        newUser.setAvatar("https://www.gravatar.com/avatar/?d=mp");
+        newUser.setLastLogin(LocalDateTime.now());
         userRepository.save(newUser);
         return ResponseEntity.ok("user registered successfully!");
     }

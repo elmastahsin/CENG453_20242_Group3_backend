@@ -10,7 +10,6 @@ import java.util.Random;
 public class User {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "user_id", updatable = false, nullable = false, unique = true)
     private Long userId;
 
@@ -50,7 +49,6 @@ public class User {
         if (this.userId == null) {
             this.userId = generateRandom6DigitId();
         }
-        this.createdAt = LocalDateTime.now();
         this.createdAt = LocalDateTime.now();
     }
 
