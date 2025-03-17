@@ -1,7 +1,5 @@
-You're on a solid track for Phase 2! Here's a structured **implementation plan** to help you meet the deadline:
 
----
-
+# 🎮 Uno Game Project TEMPLATE
 ## **🔹 Phase 2 - Backend Development Plan**
 ### **📌 1. Database Design (MariaDB)**
 You'll need tables for users, games, and leaderboards:
