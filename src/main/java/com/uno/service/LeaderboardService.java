@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -27,6 +28,7 @@ public class LeaderboardService {
     
     public ResponseEntity<GeneralResponseWithData<List<LeaderboardEntryDTO>>> getWeeklyLeaderboard(String gameType) {
         LocalDateTime weekAgo = LocalDateTime.now().minus(1, ChronoUnit.WEEKS);
+
         return getLeaderboardSince(weekAgo, gameType, "Weekly");
     }
     
@@ -50,26 +52,34 @@ public class LeaderboardService {
                 new Status(HttpStatus.OK, "Success"),result
         ));
     }
-    
+
     private ResponseEntity<GeneralResponseWithData<List<LeaderboardEntryDTO>>> getLeaderboardSince(
             LocalDateTime since, String gameType, String timePeriod) {
-        
+
+        List<String> validGameTypes = List.of("SINGLE_PLAYER","TWO_PLAYER","THREE_PLAYER","FOUR_PLAYER"); // Replace with actual values
         List<Leaderboard> leaderboardEntries;
-        
+
         if (gameType != null && !gameType.isEmpty()) {
+            if (!validGameTypes.contains(gameType.toUpperCase())) {
+                return ResponseEntity.ok(new GeneralResponseWithData<>(
+                        new Status(HttpStatus.BAD_REQUEST, "ERROR"),
+                        Collections.emptyList()
+                ));
+            }
             leaderboardEntries = leaderboardRepository.findTopScoresByGameTypeSince(gameType, since);
         } else {
             leaderboardEntries = leaderboardRepository.findTopScoresSince(since);
         }
-        
+
         List<LeaderboardEntryDTO> result = mapToDTO(leaderboardEntries);
-        
+
         return ResponseEntity.ok(new GeneralResponseWithData<>(
                 new Status(HttpStatus.OK, "Success"),
                 result
         ));
     }
-    
+
+
     private List<LeaderboardEntryDTO> mapToDTO(List<Leaderboard> leaderboardEntries) {
         return leaderboardEntries.stream()
                 .map(entry -> new LeaderboardEntryDTO(

@@ -56,7 +56,7 @@ class LeaderboardControllerTest {
 
         // Act
         ResponseEntity<GeneralResponseWithData<List<LeaderboardEntryDTO>>> response = 
-                leaderboardController.getWeeklyLeaderboard(null);
+                leaderboardController.getWeeklyLeaderboard("");
 
         // Assert
         assertNotNull(response);
@@ -88,7 +88,7 @@ class LeaderboardControllerTest {
 
         // Act
         ResponseEntity<GeneralResponseWithData<List<LeaderboardEntryDTO>>> response = 
-                leaderboardController.getMonthlyLeaderboard(null);
+                leaderboardController.getMonthlyLeaderboard("");
 
         // Assert
         assertNotNull(response);
@@ -120,7 +120,7 @@ class LeaderboardControllerTest {
 
         // Act
         ResponseEntity<GeneralResponseWithData<List<LeaderboardEntryDTO>>> response = 
-                leaderboardController.getAllTimeLeaderboard(null);
+                leaderboardController.getAllTimeLeaderboard("");
 
         // Assert
         assertNotNull(response);

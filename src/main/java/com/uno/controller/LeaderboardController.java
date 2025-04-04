@@ -32,6 +32,7 @@ public class LeaderboardController {
     public ResponseEntity<GeneralResponseWithData<List<LeaderboardEntryDTO>>> getWeeklyLeaderboard(
             @Parameter(description = "Filter by game type (optional)")
             @RequestParam(required = false) String gameType) {
+
         return leaderboardService.getWeeklyLeaderboard(gameType);
     }
     
