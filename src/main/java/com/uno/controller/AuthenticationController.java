@@ -36,7 +36,7 @@ public class AuthenticationController {
     @Operation(summary = "Authenticate User", description = "Authenticate User")
     @PostMapping("/login")
     public ResponseEntity<?> authenticate(@Valid @RequestBody LoginRequestDTO loginRequestDTO) {
-        return authenticationService.login(loginRequestDTO); // ✅ This keeps the status intact
+        return authenticationService.login(loginRequestDTO);
     }
 
 
