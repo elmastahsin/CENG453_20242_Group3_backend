@@ -6,6 +6,7 @@ import com.uno.dtos.responseDto.Status;
 import com.uno.entity.Leaderboard;
 import com.uno.repository.LeaderboardRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
@@ -46,9 +47,7 @@ public class LeaderboardService {
         List<LeaderboardEntryDTO> result = mapToDTO(leaderboardEntries);
         
         return ResponseEntity.ok(new GeneralResponseWithData<>(
-                Status.SUCCESS,
-                "All-time leaderboard retrieved successfully",
-                result
+                new Status(HttpStatus.OK, "Success"),result
         ));
     }
     
@@ -66,8 +65,7 @@ public class LeaderboardService {
         List<LeaderboardEntryDTO> result = mapToDTO(leaderboardEntries);
         
         return ResponseEntity.ok(new GeneralResponseWithData<>(
-                Status.SUCCESS,
-                timePeriod + " leaderboard retrieved successfully",
+                new Status(HttpStatus.OK, "Success"),
                 result
         ));
     }

@@ -1,9 +1,21 @@
 package com.uno.entity;
 
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
+import java.sql.Timestamp;
 import java.time.LocalDateTime;
 
 @Entity
+@Getter
+@Setter
+@AllArgsConstructor
+@NoArgsConstructor
 @Table(name = "leaderboard")
 public class Leaderboard {
 
@@ -17,6 +29,7 @@ public class Leaderboard {
 
     private Long score;
 
+    @JsonSerialize(using = ToStringSerializer.class)
     @Column(name = "score_date")
     private LocalDateTime scoreDate;
 
@@ -24,44 +37,5 @@ public class Leaderboard {
     @JoinColumn(name = "game_id", nullable = false)
     private Game game;
 
-    // Getters and Setters
-    public Long getId() {
-        return id;
-    }
 
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public User getUser() {
-        return user;
-    }
-
-    public void setUser(User user) {
-        this.user = user;
-    }
-
-    public Long getScore() {
-        return score;
-    }
-
-    public void setScore(Long score) {
-        this.score = score;
-    }
-
-    public LocalDateTime getScoreDate() {
-        return scoreDate;
-    }
-
-    public void setScoreDate(LocalDateTime scoreDate) {
-        this.scoreDate = scoreDate;
-    }
-
-    public Game getGame() {
-        return game;
-    }
-
-    public void setGame(Game game) {
-        this.game = game;
-    }
 }

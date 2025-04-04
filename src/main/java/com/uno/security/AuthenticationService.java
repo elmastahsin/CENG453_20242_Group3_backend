@@ -17,6 +17,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.mail.MailException;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -147,7 +148,7 @@ public class AuthenticationService {
 
     private Status getSuccessStatus() {
         Status status = new Status();
-        status.setCode("200");
+        status.setCode(HttpStatus.OK);
         status.setDescription("No error");
         return status;
     }
