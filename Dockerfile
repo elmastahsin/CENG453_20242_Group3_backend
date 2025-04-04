@@ -1,24 +1,32 @@
-# Build Stage
-FROM --platform=linux/amd64 maven:3.8-openjdk-17 AS build-stage
+# Build Stage: Uygulamayı derlemek için kullanılan aşama
+FROM openjdk:17-jdk AS build-stage
 
+# Çalışma dizinini ayarla
 WORKDIR /usr/app
 
+# Proje dosyalarını kopyala
 COPY . /usr/app
 
-# Run Maven build
-RUN mvn clean package -DskipTests
+# Maven Wrapper script'ine çalıştırma izni ver
+RUN chmod +x mvnw
 
-# List files to see what was actually created
-RUN echo "Contents of target directory:" && \
-    ls -la target/ || echo "Target directory doesn't exist"
+# Maven Wrapper'ın doğru çalıştığından emin olmak için bir kontrol yap
+RUN ./mvnw --version
 
-# Run Stage
-FROM --platform=linux/amd64 openjdk:17-jdk-slim
+# Uygulamayı derle (testleri atlayarak)
+RUN ./mvnw clean package -DskipTests
 
+# Final Stage: Çalıştırılabilir görüntüyü oluştur
+FROM openjdk:17-jdk-slim
+
+# Çalışma dizinini ayarla
 WORKDIR /usr/app
 
-# Copy the specific JAR file with the UnoApplication name
-COPY --from=build-stage /usr/app/target/UnoApplication-*.jar /usr/app/UnoApplication.jar
+# Build stage'den oluşturulan JAR dosyasını kopyala
+COPY --from=build-stage /usr/app/target/*.jar /usr/app/app.jar
 
-# Use the specific application name in the entrypoint
-ENTRYPOINT ["java", "-jar", "UnoApplication.jar"]
+# Uygulamayı çalıştır
+CMD ["java", "-jar", "app.jar"]
+
+# Uygulamanın dışarıya açacağı port (Spring Boot varsayılan olarak 8080 kullanır)
+EXPOSE 8080
