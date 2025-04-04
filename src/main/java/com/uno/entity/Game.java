@@ -40,7 +40,7 @@ public class Game {
     }
 
     public enum GameType {
-        TWO_PLAYER, THREE_PLAYER
+        SINGLE_PLAYER, TWO_PLAYER, THREE_PLAYER, FOUR_PLAYER
     }
 
     // Getters and Setters
