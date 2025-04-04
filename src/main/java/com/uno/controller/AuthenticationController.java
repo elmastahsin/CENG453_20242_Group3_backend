@@ -15,13 +15,12 @@ import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
 import java.util.List;
-import java.util.UUID;
 
 @RestController
 @RequestMapping("/api/auth")
 @Tag(name = "Authentication", description = "Authentication")
 public class AuthenticationController {
-    private  final AuthenticationService authenticationService;
+    private final AuthenticationService authenticationService;
 
     public AuthenticationController(AuthenticationService authenticationService) {
         this.authenticationService = authenticationService;
@@ -57,14 +56,31 @@ public class AuthenticationController {
 
     @Operation(summary = "Delete User By Id", description = "Delete User By Id")
     @DeleteMapping("/delete")
-    public ResponseEntity<?> deleteUser(@RequestParam UUID id) {
+    public ResponseEntity<?> deleteUser(@RequestParam Long id) {
         return authenticationService.deleteUser(id);
     }
 
     @Operation(summary = "Reset Password", description = "Reset Password")
     @PostMapping("/reset-password")
     public ResponseEntity<?> resetPassword(@RequestParam String username, @RequestParam String password, @RequestParam String newPassword) {
-
         return authenticationService.resetPassword(username, password, newPassword);
+    }
+
+    @Operation(summary = "Request Password Reset", description = "Request a password reset link via email")
+    @PostMapping("/forgot-password")
+    public ResponseEntity<?> forgotPassword(@RequestParam String email) {
+        return authenticationService.createPasswordResetToken(email);
+    }
+
+    @Operation(summary = "Validate Reset Token", description = "Validate the password reset token")
+    @GetMapping("/validate-reset-token")
+    public ResponseEntity<?> validateResetToken(@RequestParam String token) {
+        return authenticationService.validatePasswordResetToken(token);
+    }
+
+    @Operation(summary = "Set New Password", description = "Set a new password using reset token")
+    @PostMapping("/set-new-password")
+    public ResponseEntity<?> setNewPassword(@RequestParam String token, @RequestParam String newPassword) {
+        return authenticationService.setNewPasswordByToken(token, newPassword);
     }
 }

@@ -78,7 +78,7 @@ public class WebConfig {
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http.csrf(csrf -> csrf.disable()).cors(withDefaults())
 
-                .exceptionHandling(exception -> exception.accessDeniedHandler(customAccessDeniedHandler()).authenticationEntryPoint(customAuthenticationEntryPoint())).sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)).authorizeHttpRequests(auth -> auth.requestMatchers("/api/auth/login/**", "/api/auth/register/**", "/swagger-ui.html", "/swagger-ui/**", "/v3/api-docs/**", "/api-docs").permitAll().anyRequest().authenticated());
+                .exceptionHandling(exception -> exception.accessDeniedHandler(customAccessDeniedHandler()).authenticationEntryPoint(customAuthenticationEntryPoint())).sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)).authorizeHttpRequests(auth -> auth.requestMatchers("/api/auth/login/**", "/api/auth/forgot-password/**", "/api/auth/**","/api/auth/register/**", "/swagger-ui.html", "/swagger-ui/**", "/v3/api-docs/**", "/api-docs").permitAll().anyRequest().authenticated());
 
         http.authenticationProvider(authenticationProvider(userDetailsService));
         http.addFilterBefore(authenticationJwtTokenFilter, UsernamePasswordAuthenticationFilter.class);

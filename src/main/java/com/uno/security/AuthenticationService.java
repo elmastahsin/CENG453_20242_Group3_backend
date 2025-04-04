@@ -7,13 +7,18 @@ import com.uno.dtos.RegisterUserDTO;
 import com.uno.dtos.responseDto.GeneralResponse;
 import com.uno.dtos.responseDto.GeneralResponseWithData;
 import com.uno.dtos.responseDto.Status;
+import com.uno.entity.PasswordResetToken;
 import com.uno.entity.User;
 import com.uno.repository.UserRepository;
+import com.uno.service.EmailService;
 import com.uno.util.MapperUtil;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
+import org.springframework.mail.MailException;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -30,21 +35,32 @@ import java.util.UUID;
 
 @Service
 public class AuthenticationService {
+    private static final Logger logger = LoggerFactory.getLogger(AuthenticationService.class);
     private final UserRepository userRepository;
     private final BCryptPasswordEncoder passwordEncoder;
     private final AuthenticationManager authenticationManager;
     private final JwtService jwtService;
     private final UserDetailsService userDetailsService;
     private final MapperUtil mapper;
+    private final PasswordResetTokenRepository tokenRepository;
+    private final EmailService emailService;
 
-
-    public AuthenticationService(UserRepository userRepository, BCryptPasswordEncoder passwordEncoder, AuthenticationManager authenticationManager, JwtService jwtService, UserDetailsService userDetailsService, MapperUtil mapper) {
+    public AuthenticationService(UserRepository userRepository,
+                                 BCryptPasswordEncoder passwordEncoder,
+                                 AuthenticationManager authenticationManager,
+                                 JwtService jwtService,
+                                 UserDetailsService userDetailsService,
+                                 MapperUtil mapper,
+                                 PasswordResetTokenRepository tokenRepository,
+                                 EmailService emailService) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
         this.authenticationManager = authenticationManager;
         this.jwtService = jwtService;
         this.userDetailsService = userDetailsService;
         this.mapper = mapper;
+        this.tokenRepository = tokenRepository;
+        this.emailService = emailService;
     }
 
     // authentication method
@@ -52,8 +68,7 @@ public class AuthenticationService {
         Authentication authentication;
         try {
 
-            authentication = authenticationManager.authenticate(
-                    new UsernamePasswordAuthenticationToken(loginRequestDTO.getUsername(), loginRequestDTO.getPassword()));
+            authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(loginRequestDTO.getUsername(), loginRequestDTO.getPassword()));
         } catch (Exception e) {
             return ResponseEntity.badRequest().body("Invalid username or password");
         }
@@ -75,13 +90,11 @@ public class AuthenticationService {
         userRepository.save(user);
 
 
-
         return ResponseEntity.ok(new JwtResponse(accessToken, refreshToken));
     }
 
     // Refresh token method
-    public ResponseEntity<?> refreshToken(HttpServletRequest request,
-                                          HttpServletResponse response) throws IOException {
+    public ResponseEntity<?> refreshToken(HttpServletRequest request, HttpServletResponse response) throws IOException {
         String authHeader = request.getHeader("Authorization");
         String token = null;
         Boolean refresh = false;
@@ -97,8 +110,7 @@ public class AuthenticationService {
                 String accessToken = jwtService.generateToken(username);
                 String refreshToken = jwtService.generateRefreshToken(username);
 
-                var authResponse = new JwtResponse(accessToken,
-                        refreshToken);
+                var authResponse = new JwtResponse(accessToken, refreshToken);
                 new ObjectMapper().writeValue(response.getOutputStream(), authResponse);
             }
         }
@@ -140,7 +152,7 @@ public class AuthenticationService {
         return status;
     }
 
-    public ResponseEntity<?> deleteUser(UUID id) {
+    public ResponseEntity<?> deleteUser(Long id) {
         Optional<User> user = userRepository.findById(id);
         if (user.isEmpty()) {
             return ResponseEntity.badRequest().body("User not found!");
@@ -160,5 +172,83 @@ public class AuthenticationService {
         user.get().setPassword(passwordEncoder.encode(newPassword));
         userRepository.save(user.get());
         return ResponseEntity.ok("Password reset successfully!");
+    }
+
+    public ResponseEntity<?> createPasswordResetToken(String email) {
+        Optional<User> userOptional = userRepository.findByEmail(email);
+        if (userOptional.isEmpty()) {
+            return ResponseEntity.badRequest().body("User with this email not found!");
+        }
+
+        User user = userOptional.get();
+
+        // Generate a random token
+        String token = UUID.randomUUID().toString();
+
+        // Create a new password reset token entity
+        PasswordResetToken resetToken = new PasswordResetToken();
+        resetToken.setToken(token);
+        resetToken.setUser(user);
+        resetToken.setExpiryDate(LocalDateTime.now().plusHours(24)); // Token valid for 24 hours
+
+        // Save the token
+        tokenRepository.save(resetToken);
+
+        try {
+            // Send email with reset link
+            emailService.sendPasswordResetEmail(user.getEmail(), token);
+            return ResponseEntity.ok("Password reset link has been sent to your email");
+        } catch (MailException e) {
+            logger.error("Failed to send password reset email", e);
+            // Return the token directly to user as fallback
+            String resetLink = "Please use this token to reset your password: " + token;
+            return ResponseEntity.ok(resetLink);
+        }
+    }
+
+    public ResponseEntity<?> validatePasswordResetToken(String token) {
+        Optional<PasswordResetToken> tokenOptional = tokenRepository.findByToken(token);
+
+        if (tokenOptional.isEmpty()) {
+            return ResponseEntity.badRequest().body("Invalid password reset token");
+        }
+
+        PasswordResetToken resetToken = tokenOptional.get();
+
+        // Check if token is expired
+        if (resetToken.getExpiryDate().isBefore(LocalDateTime.now())) {
+            tokenRepository.delete(resetToken); // Clean up expired token
+            return ResponseEntity.badRequest().body("Password reset token has expired");
+        }
+
+        return ResponseEntity.ok("Token is valid");
+    }
+
+    public ResponseEntity<?> setNewPasswordByToken(String token, String newPassword) {
+        Optional<PasswordResetToken> tokenOptional = tokenRepository.findByToken(token);
+
+        if (tokenOptional.isEmpty()) {
+            return ResponseEntity.badRequest().body("Invalid password reset token");
+        }
+
+        PasswordResetToken resetToken = tokenOptional.get();
+
+        // Check if token is expired
+        if (resetToken.getExpiryDate().isBefore(LocalDateTime.now())) {
+            tokenRepository.delete(resetToken); // Clean up expired token
+            return ResponseEntity.badRequest().body("Password reset token has expired");
+        }
+
+        // Get the user from the token
+        User user = resetToken.getUser();
+
+        // Update password
+        user.setPassword(passwordEncoder.encode(newPassword));
+        userRepository.save(user);
+
+        // Delete the used token
+        tokenRepository.delete(resetToken);
+
+        return ResponseEntity.ok("Password has been reset successfully");
     }
 }

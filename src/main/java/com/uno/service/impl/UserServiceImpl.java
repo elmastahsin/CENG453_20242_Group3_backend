@@ -1,8 +1,9 @@
-package com.uno.service;
+package com.uno.service.impl;
 
 import com.uno.dtos.RegisterUserDTO;
 import com.uno.entity.User;
 import com.uno.repository.UserRepository;
+import com.uno.service.UserService;
 import com.uno.util.MapperUtil;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;

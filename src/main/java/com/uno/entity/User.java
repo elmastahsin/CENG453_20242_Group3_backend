@@ -1,12 +1,14 @@
 package com.uno.entity;
 
 import jakarta.persistence.*;
+import lombok.RequiredArgsConstructor;
 
 import java.time.LocalDateTime;
 import java.util.Random;
 
 @Entity
 @Table(name = "users")
+@RequiredArgsConstructor
 public class User {
 
     @Id
