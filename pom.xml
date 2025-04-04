@@ -108,21 +108,23 @@
             <scope>test</scope>
         </dependency>
 
-
         <dependency>
             <groupId>org.mockito</groupId>
             <artifactId>mockito-core</artifactId>
-            <version>5.10.0</version> <!-- Check for latest version -->
+            <version>5.11.0</version> <!-- Use latest version -->
+            <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>net.bytebuddy</groupId>
             <artifactId>byte-buddy</artifactId>
-            <version>1.14.12</version> <!-- Check for latest version -->
+            <version>1.14.13</version> <!-- Use latest version -->
+            <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>net.bytebuddy</groupId>
             <artifactId>byte-buddy-agent</artifactId>
-            <version>1.14.12</version> <!-- Check for latest version -->
+            <version>1.14.13</version> <!-- Use latest version -->
+            <scope>test</scope>
         </dependency>
     </dependencies>
 
@@ -153,6 +155,14 @@
                     </annotationProcessorPaths>
                 </configuration>
             </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <configuration>
+                    <argLine>-Xshare:off</argLine>
+                </configuration>
+            </plugin>
         </plugins>
+
     </build>
 </project>
