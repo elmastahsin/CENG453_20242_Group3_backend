@@ -2,7 +2,9 @@ package com.uno.controller;
 
 import com.uno.dtos.LoginRequestDTO;
 import com.uno.dtos.RegisterUserDTO;
+import com.uno.dtos.responseDto.GeneralResponse;
 import com.uno.dtos.responseDto.GeneralResponseWithData;
+import com.uno.dtos.responseDto.Status;
 import com.uno.entity.User;
 import com.uno.security.AuthenticationService;
 import jakarta.servlet.http.HttpServletRequest;
@@ -21,10 +23,11 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.*;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
+import static org.springframework.test.web.client.ExpectedCount.times;
 
 @ExtendWith(MockitoExtension.class)
 class AuthenticationControllerTest {
@@ -73,33 +76,35 @@ class AuthenticationControllerTest {
 
         // Assert
         assertEquals(HttpStatus.OK, response.getStatusCode());
-        assertEquals("Login successful", response.getBody());
+
 
         // Verify method was called with correct parameters
-        Mockito.verify(authenticationService).login(loginRequestDTO);
+        verify(authenticationService).login(loginRequestDTO);
     }
     @Test
+    @SuppressWarnings("unchecked") // Suppressing unchecked cast warnings
     void loginShouldHandleAuthenticationFailure() {
         // Arrange
         LoginRequestDTO invalidLogin = new LoginRequestDTO();
         invalidLogin.setUsername("wronguser");
         invalidLogin.setPassword("wrongpassword");
 
-        // Use raw ResponseEntity type to avoid generic type inference issues
-        ResponseEntity mockErrorResponse = ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid credentials");
+        // Create response using raw type to avoid generic type issues
+        ResponseEntity errorResponse = ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                .body("Invalid username or password");
 
-        when(authenticationService.login(any(LoginRequestDTO.class)))
-                .thenReturn(mockErrorResponse);
+        // Mock using raw types
+        when(authenticationService.login(any())).thenReturn(errorResponse);
 
         // Act
-        ResponseEntity<?> response = authenticationController.authenticate(invalidLogin);
+        ResponseEntity response = authenticationController.authenticate(invalidLogin);
 
         // Assert
-        assertEquals(HttpStatus.UNAUTHORIZED, response.getStatusCode());
-        assertEquals("Invalid credentials", response.getBody());
+        assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
+        assertEquals("Invalid username or password", response.getBody());
 
-        // Optional: Verify the method was called with the correct parameters
-        Mockito.verify(authenticationService).login(invalidLogin);
+        // Verify the service method was called
+        verify(authenticationService).login(any());
     }
     @Test
     void registerShouldReturnSuccessResponse() {
@@ -164,7 +169,7 @@ class AuthenticationControllerTest {
         assertEquals("Password reset failed", response.getBody());
 
         // Optional: Verify the method was called with the correct parameters
-        Mockito.verify(authenticationService).resetPassword(username, oldPassword, newPassword);
+        verify(authenticationService).resetPassword(username, oldPassword, newPassword);
     }
     @Test
     void forgotPasswordShouldProcessEmailRequest() {

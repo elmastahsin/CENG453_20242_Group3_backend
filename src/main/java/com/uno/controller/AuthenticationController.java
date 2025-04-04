@@ -36,9 +36,9 @@ public class AuthenticationController {
     @Operation(summary = "Authenticate User", description = "Authenticate User")
     @PostMapping("/login")
     public ResponseEntity<?> authenticate(@Valid @RequestBody LoginRequestDTO loginRequestDTO) {
-        ResponseEntity<?> login = authenticationService.login(loginRequestDTO);
-        return ResponseEntity.ok(login);
+        return authenticationService.login(loginRequestDTO); // ✅ This keeps the status intact
     }
+
 
     @Operation(summary = "Refresh Token", description = "Refresh Token")
     @PostMapping("/refresh")

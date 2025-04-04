@@ -45,11 +45,11 @@ class LeaderboardServiceTest {
     void setUp() {
         // Create mock users
         mockUser1 = new User();
-        mockUser1.setId(100001L);
+        mockUser1.setUserId(100001L);
         mockUser1.setUsername("user1");
 
         mockUser2 = new User();
-        mockUser2.setId(100002L);
+        mockUser2.setUserId(100002L);
         mockUser2.setUsername("user2");
 
         // Create mock games
@@ -194,6 +194,6 @@ class LeaderboardServiceTest {
         assertEquals(HttpStatus.OK, response.getStatusCode());  // API still returns 200 OK
         assertNotNull(response.getBody());
         assertEquals(0, response.getBody().getData().size());  // Empty result for invalid game type
-        assertEquals("ERROR", response.getBody().getStatus().getStatus().toString());
+        assertEquals("ERROR", response.getBody().getStatus().getDescription().toString());
     }
 }
