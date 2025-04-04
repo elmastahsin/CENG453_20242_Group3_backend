@@ -52,12 +52,11 @@ public class WebConfig {
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
-
-
-        configuration.setAllowedOrigins(List.of("http://localhost:3000"));
+        configuration.setAllowedOrigins(List.of("http://localhost:3000", "http://localhost:8080", "https://ceng-453-group-3.onrender.com"));
         configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
-        configuration.setAllowedHeaders(List.of("Authorization", "Cache-Control", "Content-Type"));
-        configuration.setExposedHeaders(List.of("Authorization"));
+        configuration.setAllowedHeaders(List.of("*"));
+        configuration.setExposedHeaders(List.of("*"));
+        configuration.setAllowCredentials(true);
 
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", configuration);
@@ -78,7 +77,11 @@ public class WebConfig {
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http.csrf(csrf -> csrf.disable()).cors(withDefaults())
 
-                .exceptionHandling(exception -> exception.accessDeniedHandler(customAccessDeniedHandler()).authenticationEntryPoint(customAuthenticationEntryPoint())).sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)).authorizeHttpRequests(auth -> auth.requestMatchers("/api/auth/login/**", "/api/auth/forgot-password/**", "/api/auth/**","/api/auth/register/**", "/swagger-ui.html", "/swagger-ui/**", "/v3/api-docs/**", "/api-docs").permitAll().anyRequest().authenticated());
+                .exceptionHandling(exception -> exception.accessDeniedHandler(customAccessDeniedHandler())
+                        .authenticationEntryPoint(customAuthenticationEntryPoint())).sessionManagement(
+                                session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)).authorizeHttpRequests(
+                                        auth -> auth.requestMatchers(
+                                                "/api/auth/login/**", "/api/auth/forgot-password/**", "/api/auth/**","/api/auth/register/**", "/swagger-ui.html", "/swagger-ui/**", "/v3/api-docs/**", "/api-docs").permitAll().anyRequest().authenticated());
 
         http.authenticationProvider(authenticationProvider(userDetailsService));
         http.addFilterBefore(authenticationJwtTokenFilter, UsernamePasswordAuthenticationFilter.class);
