@@ -23,7 +23,7 @@ public class SwaggerConfig {
                         .version("1.0")
                         .description("UNO API"))
                 .addSecurityItem(new SecurityRequirement().addList("bearerAuth"))
-                .components(new io.swagger.v3.oas.models.Components().addSecuritySchemes("bearerAuth", createSecurityScheme())).servers(List.of(new Server().url("http://localhost:8080"), new Server().url("https://ceng-453-group-3.onrender.com/")));
+                .components(new io.swagger.v3.oas.models.Components().addSecuritySchemes("bearerAuth", createSecurityScheme())).servers(List.of(new Server().url("http://localhost:8080"), new Server().url("https://ceng-453-group-3.onrender.com")));
     }
 
     private SecurityScheme createSecurityScheme() {
