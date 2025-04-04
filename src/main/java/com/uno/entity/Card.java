@@ -30,7 +30,7 @@ public class Card {
     }
 
     public enum CardAction {
-        SKIP, REVERSE, DRAW_TWO, DRAW_FOUR, WILD
+        SKIP, REVERSE, DRAW_TWO, WILD, WILD_DRAW_FOUR
     }
 
     // Getters and Setters
