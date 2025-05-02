@@ -34,11 +34,12 @@ class EmailServiceImplTest {
     void shouldSendPasswordResetEmail() {
         // Arrange
         String email = "user@example.com";
+        String username = "testUser";
         String token = "test-token";
         doNothing().when(mailSender).send(any(SimpleMailMessage.class));
 
         // Act
-        emailService.sendPasswordResetEmail(email, token);
+        emailService.sendPasswordResetEmail(email, username, token);
 
         // Assert
         verify(mailSender, times(1)).send(any(SimpleMailMessage.class));
@@ -49,10 +50,11 @@ class EmailServiceImplTest {
         // Arrange
         ReflectionTestUtils.setField(emailService, "emailEnabled", false);
         String email = "user@example.com";
+        String username = "testUser";
         String token = "test-token";
 
         // Act
-        emailService.sendPasswordResetEmail(email, token);
+        emailService.sendPasswordResetEmail(email, username, token);
 
         // Assert
         verify(mailSender, never()).send(any(SimpleMailMessage.class));
