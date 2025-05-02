@@ -80,7 +80,7 @@ public class AuthenticationController {
 
     @Operation(summary = "Set New Password", description = "Set a new password using reset token")
     @PostMapping("/set-new-password")
-    public ResponseEntity<?> setNewPassword(@RequestParam String token, @RequestParam String newPassword) {
-        return authenticationService.setNewPasswordByToken(token, newPassword);
+    public ResponseEntity<?> setNewPassword(@RequestParam String token, @RequestParam String newPassword,@RequestParam String confirmPassword) {
+        return authenticationService.setNewPasswordByToken(token, newPassword,confirmPassword);
     }
 }

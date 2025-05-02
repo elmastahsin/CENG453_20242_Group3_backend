@@ -133,7 +133,25 @@ public class AuthenticationService {
         newUser.setAvatar("https://www.gravatar.com/avatar/?d=mp");
         newUser.setLastLogin(LocalDateTime.now());
         userRepository.save(newUser);
-        return ResponseEntity.ok("user registered successfully!");
+        //authenticate the user after registration
+        Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(userDTO.getUsername(), userDTO.getPassword()));
+        SecurityContextHolder.getContext().setAuthentication(authentication);
+        // Generate access and refresh tokens
+        String accessToken = jwtService.generateToken(userDTO.getUsername());
+        String refreshToken = jwtService.generateRefreshToken(userDTO.getUsername());
+        // Set the authentication in the security context
+        SecurityContextHolder.getContext().setAuthentication(authentication);
+        // Create a response object
+        JwtResponse jwtResponse = new JwtResponse(accessToken, refreshToken);
+        // Return the response
+//        try {
+//            new ObjectMapper().writeValue(new ObjectMapper().getFactory().createGenerator(response.getOutputStream()), jwtResponse);
+//        } catch (IOException e) {
+//            logger.error("Error writing response", e);
+//            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error writing response");
+//        }
+
+        return ResponseEntity.ok(new GeneralResponseWithData(new Status(HttpStatus.OK,"User register successfully"),jwtResponse));
     }
 
     public ResponseEntity<GeneralResponseWithData<List<User>>> getAllUsers() {
@@ -180,6 +198,12 @@ public class AuthenticationService {
         if (userOptional.isEmpty()) {
             return ResponseEntity.badRequest().body("User with this email not found!");
         }
+        // Check if a token already exists for this user
+//        PasswordResetToken existingToken = tokenRepository.findByUserId(userOptional.get().getId());
+//        if (existingToken != null && !existingToken.isExpired()) {
+//            return ResponseEntity.badRequest().body("Password reset token already exists for this user please check your email");
+//        }
+
 
         User user = userOptional.get();
 
@@ -197,7 +221,7 @@ public class AuthenticationService {
 
         try {
             // Send email with reset link
-            emailService.sendPasswordResetEmail(user.getEmail(), token);
+            emailService.sendPasswordResetEmail(user.getEmail(), token, user.getUsername());
             return ResponseEntity.ok("Password reset link has been sent to your email");
         } catch (MailException e) {
             logger.error("Failed to send password reset email", e);
@@ -225,13 +249,16 @@ public class AuthenticationService {
         return ResponseEntity.ok("Token is valid");
     }
 
-    public ResponseEntity<?> setNewPasswordByToken(String token, String newPassword) {
+    public ResponseEntity<?> setNewPasswordByToken(String token, String newPassword, String confirmPassword) {
         Optional<PasswordResetToken> tokenOptional = tokenRepository.findByToken(token);
 
         if (tokenOptional.isEmpty()) {
             return ResponseEntity.badRequest().body("Invalid password reset token");
         }
 
+        if (!newPassword.equals(confirmPassword)) {
+            return ResponseEntity.badRequest().body("New password and confirmation do not match");
+        }
         PasswordResetToken resetToken = tokenOptional.get();
 
         // Check if token is expired
