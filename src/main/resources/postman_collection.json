@@ -1,147 +1,7 @@
 {
   "item" : [ {
-    "name" : "Leaderboard",
-    "item" : [ {
-      "name" : "LeaderboardController - getWeeklyLeaderboard [GET] /weekly",
-      "request" : {
-        "method" : "GET",
-        "header" : [ ],
-        "body" : {
-          "mode" : "none"
-        },
-        "url" : {
-          "path" : [ "api", "leaderboard", "weekly" ],
-          "port" : "8080",
-          "host" : [ "localhost" ],
-          "protocol" : "http",
-          "query" : [ {
-            "key" : "gameType",
-            "value" : "sampleValue"
-          } ],
-          "raw" : "http://localhost:8080/api/leaderboard/weekly?gameType=sampleValue"
-        }
-      }
-    }, {
-      "name" : "LeaderboardController - getMonthlyLeaderboard [GET] /monthly",
-      "request" : {
-        "method" : "GET",
-        "header" : [ ],
-        "body" : {
-          "mode" : "none"
-        },
-        "url" : {
-          "path" : [ "api", "leaderboard", "monthly" ],
-          "port" : "8080",
-          "host" : [ "localhost" ],
-          "protocol" : "http",
-          "query" : [ {
-            "key" : "gameType",
-            "value" : "sampleValue"
-          } ],
-          "raw" : "http://localhost:8080/api/leaderboard/monthly?gameType=sampleValue"
-        }
-      }
-    }, {
-      "name" : "LeaderboardController - getAllTimeLeaderboard [GET] /all-time",
-      "request" : {
-        "method" : "GET",
-        "header" : [ ],
-        "body" : {
-          "mode" : "none"
-        },
-        "url" : {
-          "path" : [ "api", "leaderboard", "all-time" ],
-          "port" : "8080",
-          "host" : [ "localhost" ],
-          "protocol" : "http",
-          "query" : [ {
-            "key" : "gameType",
-            "value" : "sampleValue"
-          } ],
-          "raw" : "http://localhost:8080/api/leaderboard/all-time?gameType=sampleValue"
-        }
-      }
-    } ]
-  }, {
-    "name" : "Swagger Config",
-    "item" : [ {
-      "name" : "SwaggerConfigResource - openapiJson [GET] /v3/api-docs/swagger-config",
-      "request" : {
-        "method" : "GET",
-        "header" : [ ],
-        "body" : {
-          "mode" : "none"
-        },
-        "url" : {
-          "path" : [ "v3", "api-docs", "swagger-config" ],
-          "port" : "8080",
-          "host" : [ "localhost" ],
-          "protocol" : "http",
-          "query" : [ ],
-          "raw" : "http://localhost:8080/v3/api-docs/swagger-config"
-        }
-      }
-    } ]
-  }, {
-    "name" : "Open Api Web Mvc",
-    "item" : [ {
-      "name" : "OpenApiWebMvcResource - openapiYaml [GET] /v3/api-docs.yaml",
-      "request" : {
-        "method" : "GET",
-        "header" : [ ],
-        "body" : {
-          "mode" : "none"
-        },
-        "url" : {
-          "path" : [ "v3", "api-docs.yaml" ],
-          "port" : "8080",
-          "host" : [ "localhost" ],
-          "protocol" : "http",
-          "query" : [ ],
-          "raw" : "http://localhost:8080/v3/api-docs.yaml"
-        }
-      }
-    }, {
-      "name" : "OpenApiWebMvcResource - openapiJson [GET] /v3/api-docs",
-      "request" : {
-        "method" : "GET",
-        "header" : [ ],
-        "body" : {
-          "mode" : "none"
-        },
-        "url" : {
-          "path" : [ "v3", "api-docs" ],
-          "port" : "8080",
-          "host" : [ "localhost" ],
-          "protocol" : "http",
-          "query" : [ ],
-          "raw" : "http://localhost:8080/v3/api-docs"
-        }
-      }
-    } ]
-  }, {
     "name" : "Authentication",
     "item" : [ {
-      "name" : "AuthenticationController - forgotPassword [POST] /forgot-password",
-      "request" : {
-        "method" : "POST",
-        "header" : [ ],
-        "body" : {
-          "mode" : "none"
-        },
-        "url" : {
-          "path" : [ "api", "auth", "forgot-password" ],
-          "port" : "8080",
-          "host" : [ "localhost" ],
-          "protocol" : "http",
-          "query" : [ {
-            "key" : "email",
-            "value" : "sampleValue"
-          } ],
-          "raw" : "http://localhost:8080/api/auth/forgot-password?email=sampleValue"
-        }
-      }
-    }, {
       "name" : "AuthenticationController - refreshToken [POST] /refresh",
       "request" : {
         "method" : "POST",
@@ -150,101 +10,35 @@
           "mode" : "none"
         },
         "url" : {
+          "protocol" : "http",
+          "host" : [ "localhost" ],
+          "port" : "8080",
           "path" : [ "api", "auth", "refresh" ],
-          "port" : "8080",
-          "host" : [ "localhost" ],
-          "protocol" : "http",
-          "query" : [ ],
-          "raw" : "http://localhost:8080/api/auth/refresh"
+          "raw" : "http://localhost:8080/api/auth/refresh",
+          "query" : [ ]
         }
       }
     }, {
-      "name" : "AuthenticationController - validateResetToken [GET] /validate-reset-token",
-      "request" : {
-        "method" : "GET",
-        "header" : [ ],
-        "body" : {
-          "mode" : "none"
-        },
-        "url" : {
-          "path" : [ "api", "auth", "validate-reset-token" ],
-          "port" : "8080",
-          "host" : [ "localhost" ],
-          "protocol" : "http",
-          "query" : [ {
-            "key" : "token",
-            "value" : "sampleValue"
-          } ],
-          "raw" : "http://localhost:8080/api/auth/validate-reset-token?token=sampleValue"
-        }
-      }
-    }, {
-      "name" : "AuthenticationController - setNewPassword [POST] /set-new-password",
+      "name" : "AuthenticationController - register [POST] /register",
       "request" : {
         "method" : "POST",
         "header" : [ ],
         "body" : {
-          "mode" : "none"
+          "raw" : "{\n  \"password\" : \"example\",\n  \"email\" : \"example\",\n  \"username\" : \"example\"\n}",
+          "mode" : "raw",
+          "options" : {
+            "raw" : {
+              "language" : "json"
+            }
+          }
         },
         "url" : {
-          "path" : [ "api", "auth", "set-new-password" ],
-          "port" : "8080",
-          "host" : [ "localhost" ],
           "protocol" : "http",
-          "query" : [ {
-            "key" : "token",
-            "value" : "sampleValue"
-          }, {
-            "key" : "newPassword",
-            "value" : "sampleValue"
-          } ],
-          "raw" : "http://localhost:8080/api/auth/set-new-password?token=sampleValue&newPassword=sampleValue"
-        }
-      }
-    }, {
-      "name" : "AuthenticationController - deleteUser [DELETE] /delete",
-      "request" : {
-        "method" : "DELETE",
-        "header" : [ ],
-        "body" : {
-          "mode" : "none"
-        },
-        "url" : {
-          "path" : [ "api", "auth", "delete" ],
-          "port" : "8080",
           "host" : [ "localhost" ],
-          "protocol" : "http",
-          "query" : [ {
-            "key" : "id",
-            "value" : "sampleValue"
-          } ],
-          "raw" : "http://localhost:8080/api/auth/delete?id=sampleValue"
-        }
-      }
-    }, {
-      "name" : "AuthenticationController - resetPassword [POST] /reset-password",
-      "request" : {
-        "method" : "POST",
-        "header" : [ ],
-        "body" : {
-          "mode" : "none"
-        },
-        "url" : {
-          "path" : [ "api", "auth", "reset-password" ],
           "port" : "8080",
-          "host" : [ "localhost" ],
-          "protocol" : "http",
-          "query" : [ {
-            "key" : "username",
-            "value" : "sampleValue"
-          }, {
-            "key" : "password",
-            "value" : "sampleValue"
-          }, {
-            "key" : "newPassword",
-            "value" : "sampleValue"
-          } ],
-          "raw" : "http://localhost:8080/api/auth/reset-password?username=sampleValue&password=sampleValue&newPassword=sampleValue"
+          "path" : [ "api", "auth", "register" ],
+          "raw" : "http://localhost:8080/api/auth/register",
+          "query" : [ ]
         }
       }
     }, {
@@ -256,35 +50,58 @@
           "mode" : "none"
         },
         "url" : {
-          "path" : [ "api", "auth", "users" ],
-          "port" : "8080",
-          "host" : [ "localhost" ],
           "protocol" : "http",
-          "query" : [ ],
-          "raw" : "http://localhost:8080/api/auth/users"
+          "host" : [ "localhost" ],
+          "port" : "8080",
+          "path" : [ "api", "auth", "users" ],
+          "raw" : "http://localhost:8080/api/auth/users",
+          "query" : [ ]
         }
       }
     }, {
-      "name" : "AuthenticationController - register [POST] /register",
+      "name" : "AuthenticationController - setNewPassword [POST] /set-new-password",
       "request" : {
         "method" : "POST",
         "header" : [ ],
         "body" : {
-          "options" : {
-            "raw" : {
-              "language" : "json"
-            }
-          },
-          "mode" : "raw",
-          "raw" : "{\n  \"password\" : \"example\",\n  \"email\" : \"example\",\n  \"username\" : \"example\"\n}"
+          "mode" : "none"
         },
         "url" : {
-          "path" : [ "api", "auth", "register" ],
-          "port" : "8080",
-          "host" : [ "localhost" ],
           "protocol" : "http",
-          "query" : [ ],
-          "raw" : "http://localhost:8080/api/auth/register"
+          "host" : [ "localhost" ],
+          "port" : "8080",
+          "path" : [ "api", "auth", "set-new-password" ],
+          "raw" : "http://localhost:8080/api/auth/set-new-password?token=sampleValue&newPassword=sampleValue&confirmPassword=sampleValue",
+          "query" : [ {
+            "key" : "token",
+            "value" : "sampleValue"
+          }, {
+            "key" : "newPassword",
+            "value" : "sampleValue"
+          }, {
+            "key" : "confirmPassword",
+            "value" : "sampleValue"
+          } ]
+        }
+      }
+    }, {
+      "name" : "AuthenticationController - validateResetToken [GET] /validate-reset-token",
+      "request" : {
+        "method" : "GET",
+        "header" : [ ],
+        "body" : {
+          "mode" : "none"
+        },
+        "url" : {
+          "protocol" : "http",
+          "host" : [ "localhost" ],
+          "port" : "8080",
+          "path" : [ "api", "auth", "validate-reset-token" ],
+          "raw" : "http://localhost:8080/api/auth/validate-reset-token?token=sampleValue",
+          "query" : [ {
+            "key" : "token",
+            "value" : "sampleValue"
+          } ]
         }
       }
     }, {
@@ -293,21 +110,287 @@
         "method" : "POST",
         "header" : [ ],
         "body" : {
+          "raw" : "{\n  \"password\" : \"example\",\n  \"username\" : \"example\"\n}",
+          "mode" : "raw",
           "options" : {
             "raw" : {
               "language" : "json"
             }
-          },
-          "mode" : "raw",
-          "raw" : "{\n  \"password\" : \"example\",\n  \"username\" : \"example\"\n}"
+          }
         },
         "url" : {
-          "path" : [ "api", "auth", "login" ],
-          "port" : "8080",
-          "host" : [ "localhost" ],
           "protocol" : "http",
-          "query" : [ ],
-          "raw" : "http://localhost:8080/api/auth/login"
+          "host" : [ "localhost" ],
+          "port" : "8080",
+          "path" : [ "api", "auth", "login" ],
+          "raw" : "http://localhost:8080/api/auth/login",
+          "query" : [ ]
+        }
+      }
+    }, {
+      "name" : "AuthenticationController - resetPassword [POST] /reset-password",
+      "request" : {
+        "method" : "POST",
+        "header" : [ ],
+        "body" : {
+          "mode" : "none"
+        },
+        "url" : {
+          "protocol" : "http",
+          "host" : [ "localhost" ],
+          "port" : "8080",
+          "path" : [ "api", "auth", "reset-password" ],
+          "raw" : "http://localhost:8080/api/auth/reset-password?username=sampleValue&password=sampleValue&newPassword=sampleValue",
+          "query" : [ {
+            "key" : "username",
+            "value" : "sampleValue"
+          }, {
+            "key" : "password",
+            "value" : "sampleValue"
+          }, {
+            "key" : "newPassword",
+            "value" : "sampleValue"
+          } ]
+        }
+      }
+    }, {
+      "name" : "AuthenticationController - deleteUser [DELETE] /delete",
+      "request" : {
+        "method" : "DELETE",
+        "header" : [ ],
+        "body" : {
+          "mode" : "none"
+        },
+        "url" : {
+          "protocol" : "http",
+          "host" : [ "localhost" ],
+          "port" : "8080",
+          "path" : [ "api", "auth", "delete" ],
+          "raw" : "http://localhost:8080/api/auth/delete?id=sampleValue",
+          "query" : [ {
+            "key" : "id",
+            "value" : "sampleValue"
+          } ]
+        }
+      }
+    }, {
+      "name" : "AuthenticationController - forgotPassword [POST] /forgot-password",
+      "request" : {
+        "method" : "POST",
+        "header" : [ ],
+        "body" : {
+          "mode" : "none"
+        },
+        "url" : {
+          "protocol" : "http",
+          "host" : [ "localhost" ],
+          "port" : "8080",
+          "path" : [ "api", "auth", "forgot-password" ],
+          "raw" : "http://localhost:8080/api/auth/forgot-password?email=sampleValue",
+          "query" : [ {
+            "key" : "email",
+            "value" : "sampleValue"
+          } ]
+        }
+      }
+    } ]
+  }, {
+    "name" : "Card",
+    "item" : [ {
+      "name" : "CardController - getCardList [GET] /list",
+      "request" : {
+        "method" : "GET",
+        "header" : [ ],
+        "body" : {
+          "mode" : "none"
+        },
+        "url" : {
+          "protocol" : "http",
+          "host" : [ "localhost" ],
+          "port" : "8080",
+          "path" : [ "api", "card", "list" ],
+          "raw" : "http://localhost:8080/api/card/list",
+          "query" : [ ]
+        }
+      }
+    } ]
+  }, {
+    "name" : "Leaderboard",
+    "item" : [ {
+      "name" : "LeaderboardController - getAllTimeLeaderboard [GET] /all-time",
+      "request" : {
+        "method" : "GET",
+        "header" : [ ],
+        "body" : {
+          "mode" : "none"
+        },
+        "url" : {
+          "protocol" : "http",
+          "host" : [ "localhost" ],
+          "port" : "8080",
+          "path" : [ "api", "leaderboard", "all-time" ],
+          "raw" : "http://localhost:8080/api/leaderboard/all-time?gameType=sampleValue",
+          "query" : [ {
+            "key" : "gameType",
+            "value" : "sampleValue"
+          } ]
+        }
+      }
+    }, {
+      "name" : "LeaderboardController - getWeeklyLeaderboard [GET] /weekly",
+      "request" : {
+        "method" : "GET",
+        "header" : [ ],
+        "body" : {
+          "mode" : "none"
+        },
+        "url" : {
+          "protocol" : "http",
+          "host" : [ "localhost" ],
+          "port" : "8080",
+          "path" : [ "api", "leaderboard", "weekly" ],
+          "raw" : "http://localhost:8080/api/leaderboard/weekly?gameType=sampleValue",
+          "query" : [ {
+            "key" : "gameType",
+            "value" : "sampleValue"
+          } ]
+        }
+      }
+    }, {
+      "name" : "LeaderboardController - getMonthlyLeaderboard [GET] /monthly",
+      "request" : {
+        "method" : "GET",
+        "header" : [ ],
+        "body" : {
+          "mode" : "none"
+        },
+        "url" : {
+          "protocol" : "http",
+          "host" : [ "localhost" ],
+          "port" : "8080",
+          "path" : [ "api", "leaderboard", "monthly" ],
+          "raw" : "http://localhost:8080/api/leaderboard/monthly?gameType=sampleValue",
+          "query" : [ {
+            "key" : "gameType",
+            "value" : "sampleValue"
+          } ]
+        }
+      }
+    } ]
+  }, {
+    "name" : "Game",
+    "item" : [ {
+      "name" : "GameController - updateTopCard [POST] /top-card/{gameId}/update/{topCardId}",
+      "request" : {
+        "method" : "POST",
+        "header" : [ ],
+        "body" : {
+          "mode" : "none"
+        },
+        "url" : {
+          "protocol" : "http",
+          "host" : [ "localhost" ],
+          "port" : "8080",
+          "path" : [ "api", "game", "top-card", "{gameId}", "update", "{topCardId}" ],
+          "raw" : "http://localhost:8080/api/game/top-card/{gameId}/update/{topCardId}",
+          "query" : [ ]
+        }
+      }
+    }, {
+      "name" : "GameController - getGameStatus [GET] /status/{id}",
+      "request" : {
+        "method" : "GET",
+        "header" : [ ],
+        "body" : {
+          "mode" : "none"
+        },
+        "url" : {
+          "protocol" : "http",
+          "host" : [ "localhost" ],
+          "port" : "8080",
+          "path" : [ "api", "game", "status", "{id}" ],
+          "raw" : "http://localhost:8080/api/game/status/{id}",
+          "query" : [ ]
+        }
+      }
+    }, {
+      "name" : "GameController - endGame [POST] /end",
+      "request" : {
+        "method" : "POST",
+        "header" : [ ],
+        "body" : {
+          "raw" : "{\n  \"gameType\" : \"nestedObject\",\n  \"endDate\" : \"nestedObject\",\n  \"winnerId\" : 0,\n  \"id\" : 0,\n  \"startDate\" : \"nestedObject\",\n  \"multiplayer\" : false,\n  \"status\" : \"nestedObject\",\n  \"topCardId\" : 0\n}",
+          "mode" : "raw",
+          "options" : {
+            "raw" : {
+              "language" : "json"
+            }
+          }
+        },
+        "url" : {
+          "protocol" : "http",
+          "host" : [ "localhost" ],
+          "port" : "8080",
+          "path" : [ "api", "game", "end" ],
+          "raw" : "http://localhost:8080/api/game/end",
+          "query" : [ ]
+        }
+      }
+    }, {
+      "name" : "GameController - getTopCard [GET] /top-card/{id}",
+      "request" : {
+        "method" : "GET",
+        "header" : [ ],
+        "body" : {
+          "mode" : "none"
+        },
+        "url" : {
+          "protocol" : "http",
+          "host" : [ "localhost" ],
+          "port" : "8080",
+          "path" : [ "api", "game", "top-card", "{id}" ],
+          "raw" : "http://localhost:8080/api/game/top-card/{id}",
+          "query" : [ ]
+        }
+      }
+    }, {
+      "name" : "GameController - updateGameStatus [POST] /status/{id}/update/{status}",
+      "request" : {
+        "method" : "POST",
+        "header" : [ ],
+        "body" : {
+          "mode" : "none"
+        },
+        "url" : {
+          "protocol" : "http",
+          "host" : [ "localhost" ],
+          "port" : "8080",
+          "path" : [ "api", "game", "status", "{id}", "update", "{status}" ],
+          "raw" : "http://localhost:8080/api/game/status/{id}/update/{status}",
+          "query" : [ ]
+        }
+      }
+    }, {
+      "name" : "GameController - startGame [POST] /start",
+      "request" : {
+        "method" : "POST",
+        "header" : [ ],
+        "body" : {
+          "raw" : "{\n  \"gameType\" : \"nestedObject\",\n  \"endDate\" : \"nestedObject\",\n  \"winnerId\" : 0,\n  \"id\" : 0,\n  \"startDate\" : \"nestedObject\",\n  \"multiplayer\" : false,\n  \"status\" : \"nestedObject\",\n  \"topCardId\" : 0\n}",
+          "mode" : "raw",
+          "options" : {
+            "raw" : {
+              "language" : "json"
+            }
+          }
+        },
+        "url" : {
+          "protocol" : "http",
+          "host" : [ "localhost" ],
+          "port" : "8080",
+          "path" : [ "api", "game", "start" ],
+          "raw" : "http://localhost:8080/api/game/start",
+          "query" : [ ]
         }
       }
     } ]
@@ -322,19 +405,76 @@
           "mode" : "none"
         },
         "url" : {
-          "path" : [ "swagger-ui.html" ],
-          "port" : "8080",
-          "host" : [ "localhost" ],
           "protocol" : "http",
-          "query" : [ ],
-          "raw" : "http://localhost:8080/swagger-ui.html"
+          "host" : [ "localhost" ],
+          "port" : "8080",
+          "path" : [ "swagger-ui.html" ],
+          "raw" : "http://localhost:8080/swagger-ui.html",
+          "query" : [ ]
+        }
+      }
+    } ]
+  }, {
+    "name" : "Open Api Web Mvc",
+    "item" : [ {
+      "name" : "OpenApiWebMvcResource - openapiYaml [GET] /v3/api-docs.yaml",
+      "request" : {
+        "method" : "GET",
+        "header" : [ ],
+        "body" : {
+          "mode" : "none"
+        },
+        "url" : {
+          "protocol" : "http",
+          "host" : [ "localhost" ],
+          "port" : "8080",
+          "path" : [ "v3", "api-docs.yaml" ],
+          "raw" : "http://localhost:8080/v3/api-docs.yaml",
+          "query" : [ ]
+        }
+      }
+    }, {
+      "name" : "OpenApiWebMvcResource - openapiJson [GET] /v3/api-docs",
+      "request" : {
+        "method" : "GET",
+        "header" : [ ],
+        "body" : {
+          "mode" : "none"
+        },
+        "url" : {
+          "protocol" : "http",
+          "host" : [ "localhost" ],
+          "port" : "8080",
+          "path" : [ "v3", "api-docs" ],
+          "raw" : "http://localhost:8080/v3/api-docs",
+          "query" : [ ]
+        }
+      }
+    } ]
+  }, {
+    "name" : "Swagger Config",
+    "item" : [ {
+      "name" : "SwaggerConfigResource - openapiJson [GET] /v3/api-docs/swagger-config",
+      "request" : {
+        "method" : "GET",
+        "header" : [ ],
+        "body" : {
+          "mode" : "none"
+        },
+        "url" : {
+          "protocol" : "http",
+          "host" : [ "localhost" ],
+          "port" : "8080",
+          "path" : [ "v3", "api-docs", "swagger-config" ],
+          "raw" : "http://localhost:8080/v3/api-docs/swagger-config",
+          "query" : [ ]
         }
       }
     } ]
   } ],
   "info" : {
-    "_postman_id" : "811df67b-2416-4a04-9033-968b11ea604a",
     "schema" : "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_postman_id" : "3a838e88-db4d-4ea7-8650-d4b377abbbed",
     "name" : "Postman_Collection"
   }
 }

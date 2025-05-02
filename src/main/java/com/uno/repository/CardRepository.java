@@ -10,4 +10,5 @@ import java.util.Optional;
 public interface CardRepository extends JpaRepository<Card, Integer> {
     //get top card by id
     Optional<Card> findById(Integer id);
+
 }
