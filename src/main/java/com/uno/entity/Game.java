@@ -1,10 +1,13 @@
 package com.uno.entity;
 
 import jakarta.persistence.*;
+import lombok.RequiredArgsConstructor;
+
 import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "game")
+@RequiredArgsConstructor
 public class Game {
 
     @Id
@@ -34,6 +37,15 @@ public class Game {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "winner_id")
     private User winner;
+
+    public Game(Long id, GameStatus status, LocalDateTime startDate, LocalDateTime endDate, GameType gameType, Boolean isMultiplayer) {
+        this.id = id;
+        this.status = status;
+        this.startDate = startDate;
+        this.endDate = endDate;
+        this.gameType = gameType;
+        this.isMultiplayer = isMultiplayer;
+    }
 
     public enum GameStatus {
         PENDING, PLAYING, COMPLETED
