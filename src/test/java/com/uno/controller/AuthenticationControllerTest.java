@@ -57,6 +57,7 @@ class AuthenticationControllerTest {
         registerUserDTO.setUsername("newuser");
         registerUserDTO.setPassword("password");
     }
+
     @Test
     void loginShouldReturnAuthenticationResponse() {
         // Arrange
@@ -77,10 +78,10 @@ class AuthenticationControllerTest {
         // Assert
         assertEquals(HttpStatus.OK, response.getStatusCode());
 
-
         // Verify method was called with correct parameters
         verify(authenticationService).login(loginRequestDTO);
     }
+
     @Test
     @SuppressWarnings("unchecked") // Suppressing unchecked cast warnings
     void loginShouldHandleAuthenticationFailure() {
@@ -106,6 +107,7 @@ class AuthenticationControllerTest {
         // Verify the service method was called
         verify(authenticationService).login(any());
     }
+
     @Test
     void registerShouldReturnSuccessResponse() {
         // Arrange
@@ -133,6 +135,7 @@ class AuthenticationControllerTest {
         // Assert
         assertEquals(HttpStatus.OK, response.getStatusCode());
     }
+
     @Test
     void getAllUsersShouldHandleEmptyList() {
         // Arrange
@@ -148,6 +151,7 @@ class AuthenticationControllerTest {
         assertEquals(HttpStatus.OK, response.getStatusCode());
         assertTrue(response.getBody().getData().isEmpty());
     }
+
     @Test
     void resetPasswordShouldHandleException() {
         // Arrange
@@ -171,6 +175,7 @@ class AuthenticationControllerTest {
         // Optional: Verify the method was called with the correct parameters
         verify(authenticationService).resetPassword(username, oldPassword, newPassword);
     }
+
     @Test
     void forgotPasswordShouldProcessEmailRequest() {
         // Arrange
@@ -200,11 +205,11 @@ class AuthenticationControllerTest {
     @Test
     void setNewPasswordShouldUpdatePassword() {
         // Arrange
-        when(authenticationService.setNewPasswordByToken(anyString(), anyString()))
-                .thenReturn((ResponseEntity) ResponseEntity.ok("Password updated"));
+        when(authenticationService.setNewPasswordByToken(anyString(), anyString(), anyString()))
+                .thenReturn((ResponseEntity) ResponseEntity.ok("Password updated successfully"));
 
         // Act
-        ResponseEntity<?> response = authenticationController.setNewPassword("valid-token", "newPassword");
+        ResponseEntity<?> response = authenticationController.setNewPassword("valid-token", "username", "new-password");
 
         // Assert
         assertEquals(HttpStatus.OK, response.getStatusCode());
@@ -222,6 +227,7 @@ class AuthenticationControllerTest {
         // Assert
         assertEquals(HttpStatus.OK, result.getStatusCode());
     }
+
     @Test
     void deleteUserShouldRemoveUser() {
         // Arrange

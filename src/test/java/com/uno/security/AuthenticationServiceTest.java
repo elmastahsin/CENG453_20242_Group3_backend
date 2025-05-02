@@ -113,7 +113,7 @@ class AuthenticationServiceTest {
         // Assert
         assertEquals(HttpStatus.OK, response.getStatusCode());
         verify(tokenRepository).save(any(PasswordResetToken.class));
-        verify(emailService).sendPasswordResetEmail(anyString(), anyString());
+        verify(emailService).sendPasswordResetEmail(anyString(), anyString(), anyString());
     }
 
     @Test
