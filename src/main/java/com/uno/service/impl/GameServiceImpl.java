@@ -5,9 +5,11 @@ import com.uno.dtos.responseDto.GeneralResponseWithData;
 import com.uno.dtos.responseDto.Status;
 import com.uno.entity.Card;
 import com.uno.entity.Game;
+import com.uno.entity.Leaderboard;
 import com.uno.entity.User;
 import com.uno.repository.CardRepository;
 import com.uno.repository.GameRepository;
+import com.uno.repository.LeaderboardRepository;
 import com.uno.repository.UserRepository;
 import com.uno.service.GameService;
 import org.springframework.http.HttpStatus;
@@ -21,12 +23,14 @@ public class GameServiceImpl implements GameService {
     private final GameRepository gameRepository;
     private final CardRepository cardRepository;
     private final UserRepository userRepository;
+    private final LeaderboardRepository leaderboardRepository;
 
-    public GameServiceImpl(GameRepository gameRepository, CardRepository cardRepository, UserRepository userRepository) {
+    public GameServiceImpl(GameRepository gameRepository, CardRepository cardRepository, UserRepository userRepository, LeaderboardRepository leaderboardRepository) {
         this.gameRepository = gameRepository;
         this.cardRepository = cardRepository;
 
         this.userRepository = userRepository;
+        this.leaderboardRepository = leaderboardRepository;
     }
 
     public Game toEntity(GameRequestDTO gameDTO) {
@@ -55,7 +59,11 @@ public class GameServiceImpl implements GameService {
         }
 
 //         Create a new game entity and save it to the repository
-        Game game = toEntity(gameRequestDTO);
+        Game game = new Game();
+        game.setStatus(Game.GameStatus.PENDING);
+        game.setStartDate(LocalDateTime.now());
+        game.setGameType(gameRequestDTO.getGameType());
+        game.setIsMultiplayer(gameRequestDTO.getMultiplayer());
         gameRepository.save(game);
         return ResponseEntity.ok(new GeneralResponseWithData<>(new Status(HttpStatus.OK, "Game started successfully"), game.getId()));
 
@@ -81,7 +89,14 @@ public class GameServiceImpl implements GameService {
 
         // Save the updated game entity to the repository
         gameRepository.save(game);
-        return ResponseEntity.ok(new GeneralResponseWithData<>(new Status(HttpStatus.OK, "Game ended successfully"), game));
+        Leaderboard leaderboard = new Leaderboard();
+        leaderboard.setGame(game);
+        leaderboard.setUser(game.getWinner());
+        leaderboard.setScore(1L);
+        leaderboard.setScoreDate(LocalDateTime.now());
+        leaderboardRepository.save(leaderboard);
+
+        return ResponseEntity.ok(new GeneralResponseWithData<>(new Status(HttpStatus.OK, "Game ended successfully"),  leaderboard.getUser()));
 
     }
 

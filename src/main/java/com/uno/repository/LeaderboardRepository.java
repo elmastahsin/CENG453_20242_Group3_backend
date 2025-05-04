@@ -25,4 +25,6 @@ public interface LeaderboardRepository extends JpaRepository<Leaderboard, Long> 
     
     @Query("SELECT l FROM Leaderboard l WHERE l.game.gameType = :gameType ORDER BY l.score DESC")
     List<Leaderboard> findAllTimeTopScoresByGameType(@Param("gameType") String gameType);
+
+
 }
