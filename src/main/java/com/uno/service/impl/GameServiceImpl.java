@@ -96,7 +96,7 @@ public class GameServiceImpl implements GameService {
         leaderboard.setScoreDate(LocalDateTime.now());
         leaderboardRepository.save(leaderboard);
 
-        return ResponseEntity.ok(new GeneralResponseWithData<>(new Status(HttpStatus.OK, "Game ended successfully"),  leaderboard.getUser()));
+        return ResponseEntity.ok(new GeneralResponseWithData<>(new Status(HttpStatus.OK, "Game ended successfully"),  leaderboard.getUser().getUsername()));
 
     }
 
