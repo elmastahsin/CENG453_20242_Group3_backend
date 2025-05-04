@@ -37,8 +37,8 @@ public class GameServiceImpl implements GameService {
         game.setGameType(gameDTO.getGameType());
         Card card = cardRepository.findById(gameDTO.getTopCardId()).orElseThrow(() -> new IllegalArgumentException("Card not found"));
         game.setTopCard(card);
-        game.setIsMultiplayer(gameDTO.isMultiplayer());
-        User user = userRepository.findById(gameDTO.getWinnerId()).orElseThrow(() -> new IllegalArgumentException("User not found"));
+        game.setIsMultiplayer(gameDTO.getMultiplayer());
+        User user = userRepository.findByUsername(gameDTO.getWinnerUsername()).orElseThrow(() -> new IllegalArgumentException("User not found"));
         game.setWinner(user);
 
 
@@ -57,7 +57,7 @@ public class GameServiceImpl implements GameService {
 //         Create a new game entity and save it to the repository
         Game game = toEntity(gameRequestDTO);
         gameRepository.save(game);
-        return ResponseEntity.ok(new GeneralResponseWithData<>(new Status(HttpStatus.OK, "Game started successfully"), game));
+        return ResponseEntity.ok(new GeneralResponseWithData<>(new Status(HttpStatus.OK, "Game started successfully"), game.getId()));
 
 
     }
@@ -75,6 +75,10 @@ public class GameServiceImpl implements GameService {
         // Update the game status to COMPLETED
         game.setStatus(Game.GameStatus.COMPLETED);
         game.setEndDate(LocalDateTime.now());
+        game.setTopCard(null); // Set the top card to null or any other logic you want
+
+        game.setWinner(userRepository.findByUsername(gameRequestDTO.getWinnerUsername()).orElseThrow(() -> new IllegalArgumentException("User not found")));
+
         // Save the updated game entity to the repository
         gameRepository.save(game);
         return ResponseEntity.ok(new GeneralResponseWithData<>(new Status(HttpStatus.OK, "Game ended successfully"), game));
