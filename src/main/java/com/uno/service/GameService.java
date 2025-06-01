@@ -16,4 +16,6 @@ public interface GameService {
     ResponseEntity<?> getTopCard(Long gameId);
 
     ResponseEntity<?> updateTopCard(Long gameId, Integer topCardId);
+
+    ResponseEntity<?> getLobbyGames();
 }

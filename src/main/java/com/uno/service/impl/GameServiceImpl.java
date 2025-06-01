@@ -1,36 +1,38 @@
 package com.uno.service.impl;
 
 import com.uno.dtos.GameRequestDTO;
+import com.uno.dtos.GameResponseDTO;
+import com.uno.dtos.LobbyResponse;
 import com.uno.dtos.responseDto.GeneralResponseWithData;
 import com.uno.dtos.responseDto.Status;
-import com.uno.entity.Card;
-import com.uno.entity.Game;
-import com.uno.entity.Leaderboard;
-import com.uno.entity.User;
-import com.uno.repository.CardRepository;
-import com.uno.repository.GameRepository;
-import com.uno.repository.LeaderboardRepository;
-import com.uno.repository.UserRepository;
+import com.uno.entity.*;
+import com.uno.repository.*;
 import com.uno.service.GameService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 @Service
-public class GameServiceImpl implements GameService {
+public  class GameServiceImpl implements GameService {
     private final GameRepository gameRepository;
     private final CardRepository cardRepository;
     private final UserRepository userRepository;
     private final LeaderboardRepository leaderboardRepository;
+    private final GamePlayerRepository gamePlayerRepository;
 
-    public GameServiceImpl(GameRepository gameRepository, CardRepository cardRepository, UserRepository userRepository, LeaderboardRepository leaderboardRepository) {
+    public GameServiceImpl(GameRepository gameRepository, CardRepository cardRepository, UserRepository userRepository, LeaderboardRepository leaderboardRepository, GamePlayerRepository gamePlayerRepository) {
         this.gameRepository = gameRepository;
         this.cardRepository = cardRepository;
 
         this.userRepository = userRepository;
         this.leaderboardRepository = leaderboardRepository;
+        this.gamePlayerRepository = gamePlayerRepository;
     }
 
     public Game toEntity(GameRequestDTO gameDTO) {
@@ -136,7 +138,35 @@ public class GameServiceImpl implements GameService {
         gameRepository.save(game);
         return ResponseEntity.ok(new GeneralResponseWithData<>(new Status(HttpStatus.OK, "Top card updated successfully"), game.getTopCard()));
     }
+    @Override
+    public ResponseEntity<?> getLobbyGames() {
+        List<Game> games = gameRepository.getPendingAndIsMultiplayer(Game.GameStatus.PENDING);
 
+        List<Map<String, Object>> gamesList = games.stream()
+                .map(game -> {
+                    Map<String, Object> gameMap = new HashMap<>();
+                    gameMap.put("game_id", game.getId());
+                    gameMap.put("gametype", game.getGameType().toString());
+
+                    List<GamePlayer> players = gamePlayerRepository.findByGameIdOrderByIdAsc(game.getId());
+                    List<String> usernames = players.stream()
+                            .filter(player -> player != null && player.getUser() != null)
+                            .map(player -> player.getUser().getUsername())
+                            .collect(Collectors.toList());
+
+                    gameMap.put("players", usernames);
+                    gameMap.put("player_count", usernames.size());
+
+                    return gameMap;
+                })
+                .collect(Collectors.toList());
+
+        Map<String, Object> responseBody = new HashMap<>();
+        responseBody.put("success", true);
+        responseBody.put("games", gamesList);
+
+        return ResponseEntity.ok(responseBody);
+    }
     @Override
     public ResponseEntity<?> updateGameStatus(Long id, String status) {
         // Retrieve the game status from the repository

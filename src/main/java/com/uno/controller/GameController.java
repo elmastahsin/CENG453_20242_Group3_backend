@@ -51,4 +51,13 @@ public class GameController {
                                            @PathVariable ("topCardId") Integer topCardId) {
         return gameService.updateTopCard(gameId, topCardId);
     }
+
+    @GetMapping("/lobby")
+    public ResponseEntity<?> getGameHistory() {
+        try {
+            return gameService.getLobbyGames();
+        } catch (Exception e) {
+            return ResponseEntity.status(500).body("Error retrieving game lobby: " + e.getMessage());
+        }
+    }
 }
