@@ -8,10 +8,14 @@ import com.uno.repository.CardRepository;
 import java.util.ArrayList;
 import java.util.Collections; // Added import for Collections
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
 public class GameSession {
+    // Constants
+    private static final int CARDS_PER_PLAYER = 7;
+
     private final Game game;
     private final List<GamePlayer> players;
     private final Object lock = new Object();
@@ -146,25 +150,27 @@ public class GameSession {
         synchronized (lock) {
             String username = player.getUser().getUsername();
 
-            // Initialize player's hand if needed
-            if (!playerHands.containsKey(username)) {
-                playerHands.put(username, new ArrayList<>());
+            // Skip if this player already has cards
+            if (playerHands.containsKey(username)) {
+                System.out.println("[GameSession] Player " + username + " already has cards, skipping");
+                return;
             }
 
-            // Deal 7 cards to the player
-            for (int i = 0; i < 7; i++) {
-                if (deck.isEmpty()) { // Check if deck is empty before drawing
-                    // This case should ideally be prevented by the initial deck size check
-                    // and proper game logic (e.g., reshuffling discard pile if deck runs out)
-                    System.err.println("[GameSession] Deck is empty while dealing initial cards to " + username);
+            // Initialize player's hand
+            List<Card> hand = new ArrayList<>(CARDS_PER_PLAYER);
+            playerHands.put(username, hand);
+
+            // Deal exactly CARDS_PER_PLAYER cards to the player
+            for (int i = 0; i < CARDS_PER_PLAYER; i++) {
+                if (deck.isEmpty()) {
+                    System.err.println("[GameSession] Deck is empty while dealing cards to " + username);
                     break;
                 }
                 Card card = drawCardFromDeck(cardRepository);
-                playerHands.get(username).add(card);
+                hand.add(card);
             }
 
-            System.out.println("[GameSession] Dealt " + playerHands.get(username).size() +
-                " cards to player " + username);
+            System.out.println("[GameSession] Dealt " + hand.size() + " cards to player " + username);
         }
     }
 
@@ -197,6 +203,7 @@ public class GameSession {
                     cardMap.put("id", card.getId());
                     cardMap.put("color", card.getColor().toString());
                     cardMap.put("value", card.getNumber());
+                    cardMap.put("action", card.getAction());
                     cardMap.put("type", card.getCardType().toString());
                     cards.add(cardMap);
                 }
@@ -211,5 +218,35 @@ public class GameSession {
     public List<GamePlayer> getPlayers() {
         return players;
     }
-}
 
+    /**
+     * Draw a card from the deck that is suitable for being a starting card.
+     * Wild cards and special action cards are not suitable as starter cards.
+     * @param cardRepository The repository to fetch card details
+     * @return A Card that can be used as a starter card
+     */
+    public Card drawFirstPlayableCard(CardRepository cardRepository) {
+        synchronized (lock) {
+            if (deck.isEmpty()) {
+                throw new IllegalStateException("No cards left in the deck");
+            }
+
+            // Iterate through deck to find a standard card (number card)
+            for (int i = 0; i < deck.size(); i++) {
+                Integer cardId = deck.get(i);
+                Card card = cardRepository.findById(cardId).orElseThrow(() ->
+                    new IllegalStateException("Card not found: " + cardId));
+
+                // Check if the card is a standard number card (not wild, not an action card)
+                if (card.getCardType() == Card.CardType.STANDARD && card.getAction() == null) {
+                    deck.remove(i); // Remove the card from the deck
+                    return card;
+                }
+            }
+
+            // If no standard card found, just return the first card
+            // This is a fallback and should rarely happen with a properly shuffled deck
+            return drawCardFromDeck(cardRepository);
+        }
+    }
+}
