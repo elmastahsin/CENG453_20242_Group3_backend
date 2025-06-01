@@ -7,8 +7,6 @@ import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import static org.springframework.data.jpa.domain.AbstractPersistable_.id;
-
 @RestController
 @RequestMapping("/api/game")
 @Tag(name = "Game Controller", description = "Game Controller endpoints")
@@ -59,5 +57,18 @@ public class GameController {
         } catch (Exception e) {
             return ResponseEntity.status(500).body("Error retrieving game lobby: " + e.getMessage());
         }
+    }
+
+
+    @PostMapping("/create")
+    public ResponseEntity<?> createGame(@Valid @RequestBody GameRequestDTO gameRequestDTO) {
+        return gameService.startGame(gameRequestDTO);
+    }
+
+    @PostMapping("/join")
+    public ResponseEntity<?> joinGame(@Valid @RequestBody GameRequestDTO gameRequestDTO) {
+        // Logic to join a game can be implemented here
+        gameService.joinGame(gameRequestDTO);
+        return ResponseEntity.ok("Join game functionality not implemented yet");
     }
 }

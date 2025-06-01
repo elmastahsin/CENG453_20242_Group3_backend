@@ -10,9 +10,9 @@ import java.util.List;
 
 @Repository
 public interface GamePlayerRepository extends JpaRepository<GamePlayer, Long> {
-    @Query("SELECT gp FROM GamePlayer gp WHERE gp.game.id = :id ORDER BY gp.id ASC")
+    @Query("SELECT gp FROM GamePlayer gp WHERE gp.game.gameId = :id ORDER BY gp.id ASC")
     List<GamePlayer> findByGameIdOrderByIdAsc(@Param("id") Long id);
 
-    @Query("SELECT COUNT(gp) FROM GamePlayer gp WHERE gp.game.id = :id")
+    @Query("SELECT COUNT(gp) FROM GamePlayer gp WHERE gp.game.gameId = :id")
     int countByGameId(@Param("id") Long id);
 }

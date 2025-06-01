@@ -1,18 +1,22 @@
 package com.uno.entity;
 
 import jakarta.persistence.*;
+import lombok.Getter;
 import lombok.RequiredArgsConstructor;
+import lombok.Setter;
 
 import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "game")
 @RequiredArgsConstructor
+@Getter
+@Setter
 public class Game {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private Long gameId;
 
     @Enumerated(EnumType.STRING)
     private GameStatus status;
@@ -38,13 +42,15 @@ public class Game {
     @JoinColumn(name = "winner_id")
     private User winner;
 
-    public Game(Long id, GameStatus status, LocalDateTime startDate, LocalDateTime endDate, GameType gameType, Boolean isMultiplayer) {
-        this.id = id;
+    public Game(Long gameId, GameStatus status, LocalDateTime startDate, LocalDateTime endDate, GameType gameType, Card topCard, Boolean isMultiplayer, User winner) {
+        this.gameId = gameId;
         this.status = status;
         this.startDate = startDate;
         this.endDate = endDate;
         this.gameType = gameType;
+        this.topCard = topCard;
         this.isMultiplayer = isMultiplayer;
+        this.winner = winner;
     }
 
     public enum GameStatus {
@@ -55,68 +61,5 @@ public class Game {
         SINGLE_PLAYER, TWO_PLAYER, THREE_PLAYER, FOUR_PLAYER
     }
 
-    // Getters and Setters
-    public Long getId() {
-        return id;
-    }
 
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public GameStatus getStatus() {
-        return status;
-    }
-
-    public void setStatus(GameStatus status) {
-        this.status = status;
-    }
-
-    public LocalDateTime getStartDate() {
-        return startDate;
-    }
-
-    public void setStartDate(LocalDateTime startDate) {
-        this.startDate = startDate;
-    }
-
-    public LocalDateTime getEndDate() {
-        return endDate;
-    }
-
-    public void setEndDate(LocalDateTime endDate) {
-        this.endDate = endDate;
-    }
-
-    public GameType getGameType() {
-        return gameType;
-    }
-
-    public void setGameType(GameType gameType) {
-        this.gameType = gameType;
-    }
-
-    public Card getTopCard() {
-        return topCard;
-    }
-
-    public void setTopCard(Card topCard) {
-        this.topCard = topCard;
-    }
-
-    public Boolean getIsMultiplayer() {
-        return isMultiplayer;
-    }
-
-    public void setIsMultiplayer(Boolean isMultiplayer) {
-        this.isMultiplayer = isMultiplayer;
-    }
-
-    public User getWinner() {
-        return winner;
-    }
-
-    public void setWinner(User winner) {
-        this.winner = winner;
-    }
 }

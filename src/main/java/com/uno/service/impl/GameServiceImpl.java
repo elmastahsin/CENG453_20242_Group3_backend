@@ -1,5 +1,6 @@
 package com.uno.service.impl;
 
+import com.uno.dtos.GameCreateResponseDTO;
 import com.uno.dtos.GameRequestDTO;
 import com.uno.dtos.GameResponseDTO;
 import com.uno.dtos.LobbyResponse;
@@ -19,7 +20,7 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 @Service
-public  class GameServiceImpl implements GameService {
+public class GameServiceImpl implements GameService {
     private final GameRepository gameRepository;
     private final CardRepository cardRepository;
     private final UserRepository userRepository;
@@ -67,7 +68,13 @@ public  class GameServiceImpl implements GameService {
         game.setGameType(gameRequestDTO.getGameType());
         game.setIsMultiplayer(gameRequestDTO.getMultiplayer());
         gameRepository.save(game);
-        return ResponseEntity.ok(new GeneralResponseWithData<>(new Status(HttpStatus.OK, "Game started successfully"), game.getId()));
+        // If the game is multiplayer, add the players to the game
+        GameCreateResponseDTO gameCreateResponseDTO = new GameCreateResponseDTO();
+        gameCreateResponseDTO.setGameId(game.getGameId());
+        gameCreateResponseDTO.setGameType(game.getGameType());
+
+
+        return ResponseEntity.ok(new GeneralResponseWithData<>(new Status(HttpStatus.OK, "Game started successfully"), gameCreateResponseDTO));
 
 
     }
@@ -145,10 +152,10 @@ public  class GameServiceImpl implements GameService {
         List<Map<String, Object>> gamesList = games.stream()
                 .map(game -> {
                     Map<String, Object> gameMap = new HashMap<>();
-                    gameMap.put("game_id", game.getId());
+                    gameMap.put("game_id", game.getGameId());
                     gameMap.put("gametype", game.getGameType().toString());
 
-                    List<GamePlayer> players = gamePlayerRepository.findByGameIdOrderByIdAsc(game.getId());
+                    List<GamePlayer> players = gamePlayerRepository.findByGameIdOrderByIdAsc(game.getGameId());
                     List<String> usernames = players.stream()
                             .filter(player -> player != null && player.getUser() != null)
                             .map(player -> player.getUser().getUsername())
@@ -167,6 +174,20 @@ public  class GameServiceImpl implements GameService {
 
         return ResponseEntity.ok(responseBody);
     }
+
+    @Override
+    public void joinGame(GameRequestDTO gameRequestDTO) {
+
+        // Logic to join a game can be implemented here
+        // For now, we will just print the game request details
+        System.out.println("Joining game with details: " + gameRequestDTO);
+
+        // You can implement the logic to add the user to the game here
+        // For example, you might want to find the game by ID and add the user to it
+        Game game = gameRepository.findById(gameRequestDTO.getId())
+                .orElseThrow(() -> new IllegalArgumentException("Game not found"));
+    }
+
     @Override
     public ResponseEntity<?> updateGameStatus(Long id, String status) {
         // Retrieve the game status from the repository
