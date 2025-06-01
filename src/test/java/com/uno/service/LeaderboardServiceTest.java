@@ -54,11 +54,11 @@ class LeaderboardServiceTest {
 
         // Create mock games
         mockGame1 = new Game();
-        mockGame1.setId(1L);
+        mockGame1.setGameId(1L);
         mockGame1.setGameType(Game.GameType.SINGLE_PLAYER);
 
         mockGame2 = new Game();
-        mockGame2.setId(2L);
+        mockGame2.setGameId(2L);
         mockGame2.setGameType(Game.GameType.TWO_PLAYER);
 
         // Create mock leaderboard entries

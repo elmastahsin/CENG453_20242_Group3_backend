@@ -2,7 +2,7 @@ package com.uno.service;
 
 
 import com.uno.dtos.GameRequestDTO;
-import jakarta.validation.Valid;
+import com.uno.dtos.JoinGameRequestDTO;
 import org.springframework.http.ResponseEntity;
 
 public interface GameService {
@@ -20,5 +20,5 @@ public interface GameService {
 
     ResponseEntity<?> getLobbyGames();
 
-    void joinGame(@Valid GameRequestDTO gameRequestDTO);
+    ResponseEntity<?> joinGame(JoinGameRequestDTO joinGameRequestDTO);
 }

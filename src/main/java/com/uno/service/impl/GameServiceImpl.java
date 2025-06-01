@@ -1,9 +1,6 @@
 package com.uno.service.impl;
 
-import com.uno.dtos.GameCreateResponseDTO;
-import com.uno.dtos.GameRequestDTO;
-import com.uno.dtos.GameResponseDTO;
-import com.uno.dtos.LobbyResponse;
+import com.uno.dtos.*;
 import com.uno.dtos.responseDto.GeneralResponseWithData;
 import com.uno.dtos.responseDto.Status;
 import com.uno.entity.*;
@@ -174,20 +171,63 @@ public class GameServiceImpl implements GameService {
 
         return ResponseEntity.ok(responseBody);
     }
-
     @Override
-    public void joinGame(GameRequestDTO gameRequestDTO) {
+    public  ResponseEntity<?> joinGame(JoinGameRequestDTO joinGameRequestDTO){
+        // Validate the game request DTO
+        if (joinGameRequestDTO == null || joinGameRequestDTO.getGameId() == null || joinGameRequestDTO.getUsername() == null) {
+            throw new IllegalArgumentException("Invalid join game request");
+        }
 
-        // Logic to join a game can be implemented here
-        // For now, we will just print the game request details
-        System.out.println("Joining game with details: " + gameRequestDTO);
-
-        // You can implement the logic to add the user to the game here
-        // For example, you might want to find the game by ID and add the user to it
-        Game game = gameRepository.findById(gameRequestDTO.getId())
+        // Find the existing game entity by ID
+        Game game = gameRepository.findById(joinGameRequestDTO.getGameId())
                 .orElseThrow(() -> new IllegalArgumentException("Game not found"));
-    }
 
+        // Check if the game allows joining (must be PENDING and multiplayer)
+        if (game.getStatus() != Game.GameStatus.PENDING || !game.getIsMultiplayer()) {
+            return ResponseEntity.badRequest().body(
+                    new GeneralResponseWithData<>(
+                            new Status(HttpStatus.BAD_REQUEST, "Game cannot be joined"),
+                            null
+                    )
+            );
+        }
+
+        // Get the user who wants to join
+        User user = userRepository.findByUsername(joinGameRequestDTO.getUsername())
+                .orElseThrow(() -> new IllegalArgumentException("User not found"));
+
+        // Check if user is already in the game
+        boolean userAlreadyJoined = gamePlayerRepository.findByGameIdOrderByIdAsc(game.getGameId())
+                .stream()
+                .anyMatch(player -> player.getUser().getId().equals(user.getId()));
+
+        if (userAlreadyJoined) {
+            return ResponseEntity.badRequest().body(
+                    new GeneralResponseWithData<>(
+                            new Status(HttpStatus.BAD_REQUEST, "User already joined this game"),
+                            null
+                    )
+            );
+        }
+
+        // Create new GamePlayer entry
+        GamePlayer gamePlayer = new GamePlayer();
+        gamePlayer.setGame(game);
+        gamePlayer.setUser(user);
+        gamePlayer.setIsCpu(false); // Assuming this is a human player
+        gamePlayerRepository.save(gamePlayer);
+
+        GameCreateResponseDTO gameCreateResponseDTO = new GameCreateResponseDTO();
+        gameCreateResponseDTO.setGameId(game.getGameId());
+        gameCreateResponseDTO.setGameType(game.getGameType());
+        // Return success response
+        return ResponseEntity.ok(
+                new GeneralResponseWithData<>(
+                        new Status(HttpStatus.OK, "Successfully joined the game"),
+                        gameCreateResponseDTO
+                )
+        );
+    }
     @Override
     public ResponseEntity<?> updateGameStatus(Long id, String status) {
         // Retrieve the game status from the repository

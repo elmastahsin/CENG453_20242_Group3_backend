@@ -1,6 +1,7 @@
 package com.uno.controller;
 
 import com.uno.dtos.GameRequestDTO;
+import com.uno.dtos.JoinGameRequestDTO;
 import com.uno.service.GameService;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
@@ -66,9 +67,9 @@ public class GameController {
     }
 
     @PostMapping("/join")
-    public ResponseEntity<?> joinGame(@Valid @RequestBody GameRequestDTO gameRequestDTO) {
+    public ResponseEntity<?> joinGame(@Valid @RequestBody JoinGameRequestDTO gameRequestDTO) {
         // Logic to join a game can be implemented here
-        gameService.joinGame(gameRequestDTO);
-        return ResponseEntity.ok("Join game functionality not implemented yet");
+        return gameService.joinGame(gameRequestDTO);
+
     }
 }
