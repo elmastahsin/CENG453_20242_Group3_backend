@@ -131,7 +131,7 @@ public class GameServiceImpl implements GameService {
     }
 
     @Override
-    public ResponseEntity<?> updateTopCard(Long gameId, Integer topCardId) {
+    public synchronized ResponseEntity<?> updateTopCard(Long gameId, Integer topCardId) {
         // Retrieve the game entity from the repository
         Game game = gameRepository.findById(gameId).orElseThrow(() -> new IllegalArgumentException("Game not found"));
         // Retrieve the top card entity from the repository
@@ -229,7 +229,7 @@ public class GameServiceImpl implements GameService {
         );
     }
     @Override
-    public ResponseEntity<?> updateGameStatus(Long id, String status) {
+    public synchronized ResponseEntity<?> updateGameStatus(Long id, String status) {
         // Retrieve the game status from the repository
         Game game = gameRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("Game not found"));
         // Update the game status to COMPLETED
