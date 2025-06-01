@@ -166,8 +166,31 @@ public class GameWebSocketController {
     }
 
     private boolean validateMove(Game game, Card card) {
-        // Logic to validate if the move follows UNO rules
-        return true; // Placeholder
+        // If topCard is null, allow any card to be played (first move of the game)
+        if (game.getTopCard() == null) {
+            return true;
+        }
+        Card topCard = game.getTopCard();
+
+        // UNO rules:
+        // 1. If card is a wild card, always valid
+        if (card.getCardType() == Card.CardType.WILDCARD) {
+            return true;
+        }
+        // 2. If color matches
+        if (card.getColor() == topCard.getColor()) {
+            return true;
+        }
+        // 3. If number matches (for number cards)
+        if (card.getNumber() != null && card.getNumber().equals(topCard.getNumber())) {
+            return true;
+        }
+        // 4. If action matches (for action cards)
+        if (card.getAction() != null && card.getAction() == topCard.getAction()) {
+            return true;
+        }
+        // Otherwise, not a valid move
+        return false;
     }
 
     private void handleSpecialCardEffects(GameSession session, Card card) {
