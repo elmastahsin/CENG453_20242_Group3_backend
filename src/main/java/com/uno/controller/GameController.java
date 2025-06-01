@@ -1,6 +1,8 @@
 package com.uno.controller;
 
 import com.uno.dtos.GameRequestDTO;
+import com.uno.dtos.GameStateMessage;
+import com.uno.dtos.InitializeGameRequest;
 import com.uno.service.GameService;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
@@ -25,16 +27,30 @@ public class GameController {
         return gameService.startGame(gameRequestDTO);
 
     }
-
-    @GetMapping("/status/{id}")
-    public ResponseEntity<?> getGameStatus(@PathVariable ("id") Long id) {
-        return gameService.getGameStatus(id);
+    @PostMapping("/initialize")
+    public ResponseEntity<?> initializeGame(@RequestBody InitializeGameRequest request) {
+        try {
+            gameService.initializeGameState(request.getGameId(), request.getPlayerIds());
+            return ResponseEntity.ok("Game initialized successfully: " + request.getGameId());
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body("Failed to initialize game: " + e.getMessage());
+        }
     }
 
-    @PostMapping("/status/{id}/update/{status}")
-    public ResponseEntity<?> updateGameStatus(@PathVariable ("id") Long id,
-                                              @PathVariable ("status") String status) {
-        return gameService.updateGameStatus(id,status);
+
+//    @GetMapping("/status/{id}")
+//    public ResponseEntity<?> getGameStatus(@PathVariable ("id") Long id) {
+//        return gameService.getGameStatus(id);
+//    }
+
+//    @PostMapping("/status/{id}/update/{status}")
+//    public ResponseEntity<?> updateGameStatus(@PathVariable ("id") Long id,
+//                                              @PathVariable ("status") String status) {
+//        return gameService.updateGameStatus(id,status);
+//    }
+    @GetMapping("/{gameId}/state")
+    public GameStateMessage getGameState(@PathVariable String gameId) {
+        return gameService.getCurrentState(gameId);
     }
 
     @PostMapping("/end")

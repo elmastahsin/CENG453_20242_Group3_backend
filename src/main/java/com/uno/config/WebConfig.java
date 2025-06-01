@@ -81,7 +81,7 @@ public class WebConfig {
                         .authenticationEntryPoint(customAuthenticationEntryPoint())).sessionManagement(
                                 session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)).authorizeHttpRequests(
                                         auth -> auth.requestMatchers(
-                                                "/api/auth/login/**", "/api/auth/forgot-password/**", "/api/auth/**","/api/auth/register/**", "/swagger-ui.html", "/swagger-ui/**", "/v3/api-docs/**", "/api-docs").permitAll().anyRequest().authenticated());
+                                                "/api/auth/login/**", "/api/auth/forgot-password/**", "/api/auth/**","/api/auth/register/**", "/swagger-ui.html", "/swagger-ui/**", "/v3/api-docs/**", "/api-docs","/ws/**").permitAll().anyRequest().authenticated());
 
         http.authenticationProvider(authenticationProvider(userDetailsService));
         http.addFilterBefore(authenticationJwtTokenFilter, UsernamePasswordAuthenticationFilter.class);

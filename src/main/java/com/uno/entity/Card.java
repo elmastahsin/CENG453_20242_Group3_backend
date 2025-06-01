@@ -26,12 +26,18 @@ public class Card {
     }
 
     public enum CardType {
-        WILDCARD, STANDARD
+        NUMBER,
+        SKIP,
+        REVERSE,
+        DRAW_TWO,
+        WILD,
+        WILD_DRAW_FOUR
     }
 
     public enum CardAction {
-        SKIP, REVERSE, DRAW_TWO, WILD, WILD_DRAW_FOUR
+        NONE, SKIP, REVERSE, DRAW_TWO, WILD, WILD_DRAW_FOUR
     }
+
 
     // Getters and Setters
     public Integer getId() {

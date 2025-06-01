@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/api/card")
-@Tag(name = "Card Controller", description = "Card Controller endpoints")
+@Tag(name = "com.uno.dtos.Card Controller", description = "com.uno.dtos.Card Controller endpoints")
 public class CardController {
 
     private final CardService cardService;

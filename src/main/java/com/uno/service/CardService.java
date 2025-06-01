@@ -19,12 +19,12 @@ public class CardService {
     }
 
     public ResponseEntity<?> getCardList() {
-        //    private final CardColor color;
-        //    private final CardType type;
+        //    private final com.uno.dtos.CardColor color;
+        //    private final com.uno.dtos.CardType type;
         //    private final int value; // Relevant for number cards (0-9)
         //şu parametrelerle
         List<Card> cards = cardRepository.findAll();
         return ResponseEntity.ok(new GeneralResponseWithData<>(new Status(HttpStatus.OK
-        , "Card list retrieved successfully"), cards));
+        , "com.uno.dtos.Card list retrieved successfully"), cards));
     }
 }
