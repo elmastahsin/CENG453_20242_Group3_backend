@@ -18,7 +18,7 @@ public class Game {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long gameId;
 
-    @Enumerated(EnumType.STRING)
+    @Enumerated(EnumType.ORDINAL)
     private GameStatus status;
 
     @Column(name = "start_date")
@@ -54,7 +54,7 @@ public class Game {
     }
 
     public enum GameStatus {
-        PENDING, PLAYING, COMPLETED
+        PENDING, STARTED, PLAYING, COMPLETED, CANCELED
     }
 
     public enum GameType {
@@ -63,3 +63,4 @@ public class Game {
 
 
 }
+

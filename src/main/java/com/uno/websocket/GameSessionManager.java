@@ -52,4 +52,24 @@ public class GameSessionManager {
     public void sendMessageToPlayer(Long gameId, String username, Object message) {
         messagingTemplate.convertAndSendToUser(username, "/queue/game/" + gameId, message);
     }
+
+    public void logBroadcast(String topic, Object payload) {
+        System.out.println("[GameSessionManager] Broadcasting to " + topic + ": " + payload);
+    }
+
+    public void broadcastToLobby(Long gameId, Object lobbyState) {
+        String topic = "/topic/game/" + gameId + "/lobby";
+        logBroadcast(topic, lobbyState);
+        messagingTemplate.convertAndSend(topic, lobbyState);
+    }
+
+    public void broadcastToStart(Long gameId, Object startMsg) {
+        String topic = "/topic/game/" + gameId + "/start";
+        logBroadcast(topic, startMsg);
+        messagingTemplate.convertAndSend(topic, startMsg);
+    }
+
+    public GamePlayerRepository getGamePlayerRepository() {
+        return gamePlayerRepository;
+    }
 }

@@ -14,7 +14,7 @@ public class GamePlayer {
     @JoinColumn(name = "game_id", nullable = false)
     private Game game;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER) // Changed from LAZY to EAGER
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
@@ -75,3 +75,4 @@ public class GamePlayer {
         this.score = score;
     }
 }
+
